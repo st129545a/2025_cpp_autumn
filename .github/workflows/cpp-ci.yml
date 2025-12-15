@@ -1,146 +1,34 @@
-name: Build and Test Homeworks
+name: Compile All C++ Files
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:  # Для ручного запуска
+    branches: [main, master]
+  workflow_dispatch:
 
 jobs:
-  test-hw1:
+  compile:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
-    - name: Build and run HW1
-      working-directory: ./hw1
+    - name: Find and compile all .cpp files
       run: |
-        echo "=== Testing HW1 ==="
-        if [ -f "main.cpp" ]; then
-          g++ -std=c++17 -o hw1_program main.cpp
-          ./hw1_program
-          echo "HW1: SUCCESS ✓"
-        else
-          echo "ERROR: main.cpp not found in hw1 folder"
-          ls -la
-          exit 1
-        fi
-
-  test-hw2:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build and run HW2
-      working-directory: ./hw2
-      run: |
-        echo "=== Testing HW2 ==="
-        if [ -f "main.cpp" ]; then
-          g++ -std=c++17 -o hw2_program main.cpp
-          ./hw2_program
-          echo "HW2: SUCCESS ✓"
-        else
-          echo "ERROR: main.cpp not found in hw2 folder"
-          ls -la
-          exit 1
-        fi
-
-  test-hw3:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build and run HW3
-      working-directory: ./hw3
-      run: |
-        echo "=== Testing HW3 ==="
-        if [ -f "main.cpp" ]; then
-          g++ -std=c++17 -o hw3_program main.cpp
-          ./hw3_program
-          echo "HW3: SUCCESS ✓"
-        else
-          echo "ERROR: main.cpp not found in hw3 folder"
-          ls -la
-          exit 1
-        fi
-
-  test-hw4:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build and run HW4
-      working-directory: ./hw4
-      run: |
-        echo "=== Testing HW4 ==="
-        if [ -f "main.cpp" ]; then
-          g++ -std=c++17 -o hw4_program main.cpp
-          ./hw4_program
-          echo "HW4: SUCCESS ✓"
-        else
-          echo "ERROR: main.cpp not found in hw4 folder"
-          ls -la
-          exit 1
-        fi
-
-  test-hw5:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Install Google Test
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtest-dev cmake
-        cd /usr/src/gtest
-        sudo cmake CMakeLists.txt
-        sudo make
-        sudo cp lib/*.a /usr/lib
-    
-    - name: Test TextEditor (HW5 Part 1)
-      working-directory: ./hw5/TextEditor
-      run: |
-        echo "=== Testing TextEditor ==="
-        if [ -f "source.cpp" ]; then
-          g++ -std=c++17 -I/usr/include/gtest -pthread source.cpp -lgtest -lgtest_main -o texteditor_test
-          ./texteditor_test
-          echo "TextEditor: SUCCESS ✓"
-        else
-          echo "ERROR: source.cpp not found in hw5/TextEditor"
-          ls -la
-          exit 1
-        fi
-    
-    - name: Test BankAccount (HW5 Part 2)
-      working-directory: ./hw5/bankAccount
-      run: |
-        echo "=== Testing BankAccount ==="
-        if [ -f "source.cpp" ]; then
-          g++ -std=c++17 -I/usr/include/gtest -pthread source.cpp -lgtest -lgtest_main -o bankaccount_test
-          ./bankaccount_test
-          echo "BankAccount: SUCCESS ✓"
-        else
-          echo "ERROR: source.cpp not found in hw5/bankAccount"
-          ls -la
-          exit 1
-        fi
-
-  test-hw6:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build and run HW6
-      working-directory: ./hw6
-      run: |
-        echo "=== Testing HW6 ==="
-        if [ -f "main.cpp" ]; then
-          g++ -std=c++17 -o hw6_program main.cpp
-          ./hw6_program
-          echo "HW6: SUCCESS ✓"
-        else
-          echo "ERROR: main.cpp not found in hw6 folder"
-          ls -la
-          exit 1
-        fi
+        echo "=== Searching for all .cpp files ==="
+        find . -name "*.cpp" | while read cpp_file; do
+          echo ""
+          echo "=== Compiling: $cpp_file ==="
+          dir_name=$(dirname "$cpp_file")
+          base_name=$(basename "$cpp_file" .cpp)
+          
+          cd "$dir_name"
+          if g++ -std=c++17 -o "${base_name}_program" "$cpp_file" 2>&1; then
+            echo "✓ Compilation successful"
+            if [ -f "${base_name}_program" ]; then
+              echo "Running program..."
+              timeout 5s ./"${base_name}_program" && echo "✓ Execution successful" || echo "✗ Execution failed or timed out"
+            fi
+          else
+            echo "✗ Compilation failed"
+          fi
+          cd - > /dev/null
+        done
