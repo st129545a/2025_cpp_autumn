@@ -1,0 +1,131 @@
+# C++ compiled files
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.so
+*.a
+*.dll
+*.lib
+
+# Executables
+main
+test
+program
+a.out
+
+# Build directories
+build/
+dist/
+bin/
+obj/
+*.xcodeproj
+*.vcxproj
+*.sln
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Локальные тестовые файлы
+*.log
+*.tmp
+# Windows исполняемые файлы
+*.exe
+*.exp
+*.lib
+*.dll
+
+# Папки сборки Visual Studio
+x64/
+x86/
+Debug/
+Release/
+*.vcxproj
+*.sln
+*.vcxproj.filters
+
+# И дополнительные для надёжности:
+*.obj
+*.pdb
+*.ilk
+# Игнорируем скомпилированные бинарники и исполняемые файлы
+*.exe
+*.out
+*.app
+
+# Игнорируем объектные файлы и файлы зависимостей (генерируются при компиляции)
+*.o
+*.obj
+*.d
+
+# Игнорируем статические и динамические библиотеки
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+
+# Игнорируем прекомпилированные заголовки
+*.gch
+*.pch
+
+# Игнорируем файлы кэша и метаданные компиляторов
+*.slo
+*.lo
+*.ilk
+*.map
+*.exp
+
+# Игнорируем папку сборки (build directory) - часто называется 'build', 'bin', 'obj'
+/build/
+/bin/
+/obj/
+/out/
+
+# Игнорируем файлы, сгенерированные IDE (Visual Studio, Xcode, CLion)
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln
+*.vcxproj*
+*.filters
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+x64/
+x86/
+Debug/
+Release/
+CMakeSettings.json
+
+# Игнорируем файлы, сгенерированные системой (macOS)
+.DS_Store
+
+# Игнорируем резервные копии, созданные редакторами
+*~
+*.swp
+*.swo
+
+# Игнорируем документацию, сгенерированную Doxygen
+/docs/generated/
+
+# Игнорируем кэш Sanitizers (например, lsan)
+*.lsan
