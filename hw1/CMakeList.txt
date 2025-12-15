@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.10)
+project(hw1)
+
+add_executable(hw1 main.cpp)  # ← ИМЯ ИСПОЛНЯЕМОГО ФАЙЛА
+
+if(MSVC)
+    target_compile_options(hw1 PRIVATE /W4 /WX /wd4100)
+else()
+    target_compile_options(hw1 PRIVATE -Wall -Wextra -Werror -pedantic)
+endif()
