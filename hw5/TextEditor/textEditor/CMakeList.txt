@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.14)
+project(text_editor)
+
+set(CMAKE_CXX_STANDARD 17)
+
+
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+endif()
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.14.0
+)
+
+
+if(MSVC)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+endif()
+
+FetchContent_MakeAvailable(googletest)
+
+add_executable(text_editor main.cpp)
+target_link_libraries(text_editor gtest gtest_main)
