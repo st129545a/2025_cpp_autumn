@@ -1,75 +1,111 @@
-name: C++ Homework CI
+name: Windows CI
 
 on: [push, pull_request]
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     
-    - name: Install dependencies
+    - name: Build and Run HW1
+      shell: pwsh
       run: |
-        sudo apt-get update
-        sudo apt-get install -y g++ cmake make
+        cd 2025.09.20_HW1
+        cmake -B build -S .
+        cmake --build build
+        if (Test-Path "build/Debug/hw1.exe") { 
+          build/Debug/hw1.exe 
+        } else { 
+          build/hw1.exe 
+        }
     
-    - name: List homework directories
+    - name: Build and Run HW2
+      shell: pwsh  
       run: |
-        echo "=== Найденные домашние работы ==="
-        find . -maxdepth 1 -type d -name "hw*" | sort
-        echo ""
-    
-    - name: Build all homework
+        cd 2025.09.28_HW2
+        cmake -B build -S .
+        cmake --build build
+        if (Test-Path "build/Debug/hw2.exe") { 
+          build/Debug/hw2.exe 
+        } else { 
+          build/hw2.exe 
+        }
+
+    - name: Build and Run HW3
+      shell: pwsh  
       run: |
-        echo "=== Сборка всех домашних работ ==="
-        make all
-        echo ""
-        echo "=== Созданные исполняемые файлы ==="
-        find . -name "main" -type f -executable | sort
-    
-    - name: Run tests (if any)
+        cd 2025.10.04_HW3
+        cmake -B build -S .
+        cmake --build build
+        if (Test-Path "build/Debug/hw3.exe") { 
+          build/Debug/hw3.exe 
+        } else { 
+          build/hw3.exe 
+        }
+        
+    - name: Build and Run HW4
+      shell: pwsh  
       run: |
-        echo "=== Запуск программ ==="
-        make test || echo "Нет программ для запуска"
-    
-    - name: Check for compilation artifacts
+        cd 2025.10.11_HW4
+        cmake -B build -S .
+        cmake --build build
+        if (Test-Path "build/Debug/hw4.exe") { 
+          build/Debug/hw4.exe 
+        } else { 
+          build/hw4.exe 
+        }
+        
+    - name: Install GoogleTest for HW5
+      shell: pwsh
       run: |
-        echo "=== Проверка на наличие артефактов сборки ==="
-        if find . -name "*.o" -o -name "*.out" -o -name "*.exe" | grep -q .; then
-          echo "ВНИМАНИЕ: Найдены файлы сборки в репозитории!"
-          find . -name "*.o" -o -name "*.out" -o -name "*.exe"
-          echo "Убедитесь, что они добавлены в .gitignore"
-          exit 1
-        else
-          echo "✓ Артефактов сборки нет (отлично!)"
-        fi
-    - name: Lint with clang-format
+        cd 2025.10.18_HW5
+        git clone https://github.com/Microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+        .\vcpkg\vcpkg install gtest:x64-windows
+        
+    - name: Build and Run TextEditor
+      shell: pwsh  
       run: |
-        sudo apt-get install -y clang-format
-        echo "=== Проверка форматирования ==="
-        find . -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run --Werror || echo "Форматирование не соответствует стандарту"
-    - name: Build with sanitizers
+        cd 2025.10.18_HW5/TextEditor
+        cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE="../../vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake --build build --config Release
+        if (Test-Path "build/Release/text_editor.exe") { 
+          build/Release/text_editor.exe 
+        } elseif (Test-Path "build/Debug/text_editor.exe") {
+          build/Debug/text_editor.exe 
+        } else { 
+          Get-ChildItem -Path build -Recurse -Filter "text_editor.exe" | ForEach-Object { 
+            echo "Найден: $($_.FullName)"
+            & $_.FullName 
+          }
+        }
+        
+    - name: Build and Run BankAccount
+      shell: pwsh  
       run: |
-        echo "=== Сборка с санитайзерами ==="
-        for dir in $(find . -maxdepth 1 -type d -name "hw*" | sort); do
-          if [ -f "$dir/main.cpp" ]; then
-            echo "Сборка $dir с AddressSanitizer..."
-            cd "$dir"
-            g++ -std=c++11 -fsanitize=address -fno-omit-frame-pointer -g -o main_sanitized main.cpp
-            cd ..
-          fi
-        done
-    
-    - name: Run sanitized programs
+        cd 2025.10.18_HW5/BankAccount
+        cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE="../../vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake --build build --config Release
+        if (Test-Path "build/Release/bank_account.exe") { 
+          build/Release/bank_account.exe 
+        } elseif (Test-Path "build/Debug/bank_account.exe") {
+          build/Debug/bank_account.exe 
+        } else { 
+          Get-ChildItem -Path build -Recurse -Filter "bank_account.exe" | ForEach-Object { 
+            echo "Найден: $($_.FullName)"
+            & $_.FullName 
+          }
+        }
+    - name: Build and Run HW6
+      shell: pwsh  
       run: |
-        echo "=== Запуск с санитайзерами ==="
-        for dir in $(find . -maxdepth 1 -type d -name "hw*" | sort); do
-          if [ -f "$dir/main_sanitized" ] && [ -x "$dir/main_sanitized" ]; then
-            echo "Запуск $dir/main_sanitized"
-            cd "$dir"
-            ASAN_OPTIONS=detect_leaks=1 ./main_sanitized 2>&1 || true
-            cd ..
-          fi
-        done
+        cd 2025.10.25_HW6
+        cmake -B build -S .
+        cmake --build build
+        if (Test-Path "build/Debug/hw6.exe") { 
+          build/Debug/hw6.exe 
+        } else { 
+          build/hw6.exe 
+        }
