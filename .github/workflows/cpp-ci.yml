@@ -1,0 +1,205 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-hw1:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y g++ cmake
+    
+    - name: Build HW1
+      working-directory: ${{ github.workspace }}/2025.09.20_HW1
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run HW1
+      working-directory: ${{ github.workspace }}/2025.09.20_HW1/build
+      run: |
+        if [ -f "./hw1" ]; then
+          ./hw1
+        else
+          echo "Error: hw1 executable not found!"
+          ls -la
+          exit 1
+        fi
+  
+  build-hw2:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y g++ cmake
+    
+    - name: Build HW2
+      working-directory: ${{ github.workspace }}/2025.09.28_HW2
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run HW2
+      working-directory: ${{ github.workspace }}/2025.09.28_HW2/build
+      run: |
+        if [ -f "./hw2" ]; then
+          ./hw2
+        else
+          echo "Error: hw2 executable not found!"
+          ls -la
+          exit 1
+        fi
+  
+  build-hw3:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y g++ cmake
+    
+    - name: Build HW3
+      working-directory: ${{ github.workspace }}/2025.10.04_HW3
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run HW3
+      working-directory: ${{ github.workspace }}/2025.10.04_HW3/build
+      run: |
+        if [ -f "./hw3" ]; then
+          ./hw3
+        else
+          echo "Error: hw3 executable not found!"
+          ls -la
+          exit 1
+        fi
+  
+  build-hw5:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ cmake libgtest-dev
+    
+    - name: Build Google Test
+      run: |
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp lib/*.a /usr/lib
+    
+    - name: Build TextEditor (HW5 Part 1)
+      working-directory: ${{ github.workspace }}/2025.10.18_HW5/TextEditor
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run TextEditor tests (HW5 Part 1)
+      working-directory: ${{ github.workspace }}/2025.10.18_HW5/TextEditor/build
+      run: |
+        if [ -f "./textEditor" ]; then
+          ./textEditor
+        elif [ -f "./tests" ]; then
+          ./tests
+        elif [ -f "./main" ]; then
+          ./main
+        else
+          echo "No executable found for TextEditor"
+          ls -la
+          exit 1
+        fi
+    
+    - name: Build BankAccount (HW5 Part 2)
+      working-directory: ${{ github.workspace }}/2025.10.18_HW5/bankAccount
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run BankAccount tests (HW5 Part 2)
+      working-directory: ${{ github.workspace }}/2025.10.18_HW5/bankAccount/build
+      run: |
+        if [ -f "./bankAccount" ]; then
+          ./bankAccount
+        elif [ -f "./tests" ]; then
+          ./tests
+        elif [ -f "./main" ]; then
+          ./main
+        else
+          echo "No executable found for BankAccount"
+          ls -la
+          exit 1
+        fi
+  
+  build-hw4:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y g++ cmake
+    
+    - name: Build HW4
+      working-directory: ${{ github.workspace }}/2025.10.11_HW4
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run HW4
+      working-directory: ${{ github.workspace }}/2025.10.11_HW4/build
+      run: |
+        if [ -f "./hw4" ]; then
+          ./hw4
+        else
+          echo "Error: hw4 executable not found!"
+          ls -la
+          exit 1
+        fi
+  
+  build-hw6:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ cmake libgtest-dev
+    
+    - name: Build HW6
+      working-directory: ${{ github.workspace }}/2025.10.25_HW6
+      run: |
+        mkdir -p build && cd build
+        cmake ..
+        make
+    
+    - name: Run HW6 tests
+      working-directory: ${{ github.workspace }}/2025.10.25_HW6/build
+      run: |
+        if [ -f "./hw6" ]; then
+          ./hw6
+        elif [ -f "./tests" ]; then
+          ./tests
+        elif [ -f "./main" ]; then
+          ./main
+        else
+          echo "Error: executable not found for HW6!"
+          ls -la
+          exit 1
+        fi
